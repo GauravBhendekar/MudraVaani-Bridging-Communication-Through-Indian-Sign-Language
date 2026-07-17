@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MudraVaani – Live Call</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Socket.IO client -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <!-- Chart.js only if you later want graphs; safe to keep -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    video {
+      background: #000;
+      border-radius: 12px;
+    }
+
+    #islFrame {
+      width: 100%;
+      height: 260px;
+      border: none;
+      background: black;
+      border-radius: 15px;
+      transition: background 0.2s ease;
+    }
+
+    #islBoxWrapper {
+      background: #e5e7eb;
+      border-radius: 16px;
+      padding: 10px;
+    }
+
+    /* optional subtle zoom when avatar letters are playing */
+    .letterZoom {
+      transform: scale(1.02);
+      transition: transform 0.2s ease;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 text-gray-900">
+
+  <!-- NAVBAR -->
+  <nav class="flex justify-between items-center px-10 py-4 bg-gray-900 text-white sticky top-0 z-50">
+    <div class="flex items-center space-x-3">
+      <img src="images/logo2.png" class="w-12 h-12" />
+      <span class="text-xl font-bold text-teal-300">MudraVaani</span>
+    </div>
+
+    <div class="space-x-6">
+      <a href="index.html" class="hover:text-teal-300">Home</a>
+      <a href="convert.html" class="hover:text-teal-300">Convert</a>
+      <a href="learn.html" class="hover:text-teal-300">Learn Sign</a>
+      <a href="videos.html" class="hover:text-teal-300">Videos</a>
+      <a href="live_call.html" class="text-teal-300 font-semibold">Live Call</a>
+      <a href="feedback.html" class="hover:text-teal-300">Feedback</a>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="p-6 space-y-4">
+
+    <h1 class="text-2xl font-bold mb-2">Live Video Call + ISL Output</h1>
+
+    <div class="grid grid-cols-1 xl:grid-cols-[360px,1.1fr,0.95fr] gap-6">
+
+      <!-- LEFT: ROOM + LOCAL VIDEO -->
+      <section class="bg-white rounded-xl shadow p-4 space-y-4">
+        <h2 class="font-semibold text-lg mb-2">Room &amp; Controls</h2>
+
+        <div class="space-y-2">
+          <label class="text-sm font-semibold">Room ID</label>
+          <input
+            id="roomInput"
+            class="w-full border rounded px-3 py-2 text-sm"
+            placeholder="room123"
+          />
+        </div>
+
+        <div class="flex flex-wrap gap-2 mt-2">
+          <button id="startCam" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm">
+            🎥 Start Camera & Mic
+          </button>
+
+          <button id="joinRoom" class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm">
+            🔗 Join Room
+          </button>
+
+          <button id="leaveRoom" class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-sm">
+            ❌ Leave Room
+          </button>
+        </div>
+
+        <div class="flex gap-2 mt-3">
+          <button id="muteBtn" class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1 rounded text-xs">🔇 Mute</button>
+          <button id="cameraBtn" class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1 rounded text-xs">📷 Camera Off</button>
+        </div>
+
+        <p class="text-xs text-gray-600 mt-2">
+          Status:
+          <span id="status" class="font-semibold text-red-600">Idle</span>
+        </p>
+
+        <div class="mt-4 space-y-1">
+          <h3 class="text-sm font-semibold">You (Local Preview)</h3>
+          <video id="localVideo" autoplay playsinline muted class="w-full h-48 object-cover border"></video>
+        </div>
+      </section>
+
+      <!-- CENTER: REMOTE VIDEO -->
+      <section class="bg-white rounded-xl shadow p-4 space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="font-semibold text-lg">Remote Participant</h2>
+            <p class="text-xs text-gray-600" id="peerStatus">No peer connected</p>
+          </div>
+        </div>
+
+        <video id="remoteVideo" autoplay playsinline class="w-full h-[420px] object-contain border"></video>
+      </section>
+
+      <!-- RIGHT: LIVE ISL FROM SPEECH -->
+      <section class="bg-white rounded-xl shadow p-4 space-y-4">
+        <h2 class="font-semibold text-lg mb-2">Live ISL from Speech</h2>
+
+        <!-- Speech Recognition Status -->
+        <p class="text-xs text-gray-600">
+          Marathi Speech Recognition:
+          <span id="speechStatus" class="font-semibold text-red-600">off</span>
+        </p>
+
+        <!-- Speech Buttons -->
+        <div class="flex flex-wrap gap-2">
+          <button id="micOn" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-xs">
+            🎙 Mic On
+          </button>
+          <button id="micOff" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-xs">
+            ⏹ Mic Off
+          </button>
+          <button id="clearSpeech" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded text-xs">
+            🧹 Clear
+          </button>
+        </div>
+
+        <!-- Marathi + English text -->
+        <div class="space-y-2 mt-2">
+          <div>
+            <label class="text-xs font-semibold">Marathi (Recognized)</label>
+            <textarea
+              id="speechInput"
+              class="w-full border rounded px-2 py-1 text-xs"
+              rows="2"
+            ></textarea>
+          </div>
+
+          <div>
+            <label class="text-xs font-semibold">English (Translated)</label>
+            <textarea
+              id="TranslationText"
+              class="w-full border rounded px-2 py-1 text-xs"
+              rows="2"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Trigger ISL -->
+        <button
+          id="startISLFromSpeech"
+          class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm w-full mt-1"
+        >
+          🔄 Generate ISL from English Text
+        </button>
+
+        <!-- Quick model table -->
+        <div class="mt-3">
+          <h3 class="font-semibold text-sm mb-1">Model Comparison (Top Line)</h3>
+          <table class="w-full text-[11px] border">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="border px-1 py-1">Model</th>
+                <th class="border px-1 py-1">Gloss</th>
+                <th class="border px-1 py-1">Score</th>
+              </tr>
+            </thead>
+            <tbody id="modelTable"></tbody>
+          </table>
+        </div>
+
+        <!-- ISL video box -->
+        <div class="mt-4 space-y-2">
+          <div class="flex justify-between items-center">
+            <span id="currentWordLabel" class="text-xs font-semibold text-gray-700">
+              No ISL sequence loaded
+            </span>
+            <div class="flex gap-2">
+              <button id="prevBtn" class="bg-gray-700 text-white px-2 py-1 rounded text-[11px]">⏮ Prev</button>
+              <button id="nextBtn" class="bg-gray-700 text-white px-2 py-1 rounded text-[11px]">Next ⏭</button>
+            </div>
+          </div>
+
+          <div id="islBoxWrapper">
+            <iframe id="islFrame" allow="autoplay; fullscreen"></iframe>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+<script>
+  /**************************************************
+   * 1) WEBRTC LIVE CALL (same logic as working version)
+   **************************************************/
+  const socket = io("https://10.242.93.104:5001", {
+    transports: ["websocket"],
+    secure: true,
+  });
+
+  const statusSpan = document.getElementById("status");
+  const peerStatus = document.getElementById("peerStatus");
+
+  let localStream = null;
+  let pc = null;
+  let roomId = null;
+  let audioMuted = false;
+  let videoOff = false;
+
+  const rtcConfig = {
+    iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+  };
+
+  document.getElementById("startCam").onclick = async () => {
+    try {
+      localStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      document.getElementById("localVideo").srcObject = localStream;
+      statusSpan.textContent = "Camera & Mic started";
+      statusSpan.className = "font-semibold text-green-600";
+    } catch (err) {
+      alert("Camera/Mic access blocked.");
+      console.error(err);
+    }
+  };
+
+  document.getElementById("joinRoom").onclick = () => {
+    if (!localStream) return alert("Start camera first!");
+    const val = document.getElementById("roomInput").value.trim();
+    if (!val) return alert("Enter room ID.");
+
+    roomId = val;
+    socket.emit("join", { room: roomId });
+
+    statusSpan.textContent = `Joined: ${roomId}`;
+    statusSpan.className = "font-semibold text-blue-600";
+  };
+
+  document.getElementById("leaveRoom").onclick = () => {
+    if (roomId) socket.emit("leave", { room: roomId });
+    roomId = null;
+    closePeer();
+    peerStatus.textContent = "No peer connected";
+    statusSpan.textContent = "Left room";
+    statusSpan.className = "font-semibold text-red-600";
+  };
+
+  document.getElementById("muteBtn").onclick = () => {
+    if (!localStream) return;
+    audioMuted = !audioMuted;
+    localStream.getAudioTracks().forEach((t) => (t.enabled = !audioMuted));
+    document.getElementById("muteBtn").textContent = audioMuted ? "🔊 Unmute" : "🔇 Mute";
+  };
+
+  document.getElementById("cameraBtn").onclick = () => {
+    if (!localStream) return;
+    videoOff = !videoOff;
+    localStream.getVideoTracks().forEach((t) => (t.enabled = !videoOff));
+    document.getElementById("cameraBtn").textContent = videoOff ? "📷 Camera On" : "📷 Camera Off";
+  };
+
+  function createPeer() {
+    if (pc) return;
+    pc = new RTCPeerConnection(rtcConfig);
+
+    localStream.getTracks().forEach((t) => pc.addTrack(t, localStream));
+
+    pc.ontrack = (ev) => {
+      document.getElementById("remoteVideo").srcObject = ev.streams[0];
+      peerStatus.textContent = "Peer connected ✔";
+    };
+
+    pc.onicecandidate = (ev) => {
+      if (ev.candidate && roomId) {
+        socket.emit("signal", {
+          room: roomId,
+          signal: { type: "candidate", candidate: ev.candidate },
+        });
+      }
+    };
+
+    pc.onconnectionstatechange = () => {
+      if (pc.connectionState === "disconnected" || pc.connectionState === "failed") {
+        peerStatus.textContent = "Peer disconnected";
+      }
+    };
+  }
+
+  function closePeer() {
+    if (pc) pc.close();
+    pc = null;
+    document.getElementById("remoteVideo").srcObject = null;
+  }
+
+  socket.on("peer-joined", async () => {
+    createPeer();
+    peerStatus.textContent = "Peer joined… preparing offer";
+
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+
+    socket.emit("signal", { room: roomId, signal: offer });
+  });
+
+  socket.on("signal", async ({ signal }) => {
+    createPeer();
+    if (signal.type === "offer") {
+      await pc.setRemoteDescription(signal);
+      const ans = await pc.createAnswer();
+      await pc.setLocalDescription(ans);
+      socket.emit("signal", { room: roomId, signal: ans });
+    } else if (signal.type === "answer") {
+      await pc.setRemoteDescription(signal);
+    } else if (signal.type === "candidate") {
+      try {
+        await pc.addIceCandidate(signal.candidate);
+      } catch (err) {
+        console.error("Error adding ICE", err);
+      }
+    }
+  });
+
+  socket.on("peer-left", () => {
+    closePeer();
+    peerStatus.textContent = "Peer disconnected";
+  });
+
+  /**************************************************
+   * 2) LIVE ISL FROM SPEECH (Convert pipeline)
+   **************************************************/
+
+  // Globals for ISL
+  let avatarLetters = {};
+  let modelResults = [];
+  let currentSequence = [];
+  let currentIndex = 0;
+
+  // Load avatar letters (A–Z → video)
+  fetch("learn_map.json")
+    .then((res) => res.json())
+    .then((data) => (avatarLetters = data))
+    .catch((err) => console.error("Error loading learn_map.json:", err));
+
+  // Simple sequence player
+  function showCurrent() {
+    const frame = document.getElementById("islFrame");
+    const labelSpan = document.getElementById("currentWordLabel");
+
+    if (!currentSequence.length) {
+      frame.src = "";
+      frame.classList.remove("letterZoom");
+      labelSpan.textContent = "No ISL sequence loaded";
+      return;
+    }
+
+    const item = currentSequence[currentIndex];
+
+    if (item.type === "letters") {
+      frame.style.background = "transparent";
+      frame.classList.add("letterZoom");
+      // play whole word letters
+      playLetters(item.letters);
+    } else {
+      frame.style.background = "black";
+      frame.classList.remove("letterZoom");
+      frame.src = item.url;
+    }
+
+    labelSpan.textContent = `Clip ${currentIndex + 1}/${currentSequence.length} → ${item.label}`;
+  }
+
+  async function playLetters(urls) {
+    const frame = document.getElementById("islFrame");
+    frame.style.background = "transparent";
+    frame.classList.add("letterZoom");
+
+    for (let u of urls) {
+      frame.src = u;
+      await new Promise((res) => setTimeout(res, 2500));
+    }
+  }
+
+  function buildSequenceFromBest(best) {
+    currentSequence = [];
+    currentIndex = 0;
+
+    // 1) mapped gloss videos
+    best.videos.forEach((v) => {
+      currentSequence.push({
+        label: v.gloss,
+        url: v.url,
+        type: "word",
+      });
+    });
+
+    // 2) missing words → letters
+    best.missing.forEach((word) => {
+      const upper = word.toUpperCase();
+      let group = {
+        label: word,
+        type: "letters",
+        letters: [],
+      };
+
+      for (let ch of upper) {
+        if (avatarLetters[ch]) {
+          group.letters.push(avatarLetters[ch]);
+        }
+      }
+
+      if (group.letters.length > 0) {
+        currentSequence.push(group);
+      }
+    });
+
+    if (!currentSequence.length) {
+      alert("No matching ISL videos or letters found.");
+      return;
+    }
+
+    showCurrent();
+  }
+
+  // Prev / Next buttons
+  document.getElementById("prevBtn").onclick = () => {
+    if (!currentSequence.length) return;
+    if (currentIndex > 0) {
+      currentIndex--;
+      showCurrent();
+    }
+  };
+
+  document.getElementById("nextBtn").onclick = () => {
+    if (!currentSequence.length) return;
+    if (currentIndex < currentSequence.length - 1) {
+      currentIndex++;
+      showCurrent();
+    }
+  };
+
+  // ------- Speech Recognition (Marathi) --------
+  window.SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  let recognition = null;
+  if (window.SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.lang = "mr-IN";
+    recognition.interimResults = false;
+  }
+
+  const speechStatus = document.getElementById("speechStatus");
+  const speechInput = document.getElementById("speechInput");
+  const translationBox = document.getElementById("TranslationText");
+
+  document.getElementById("micOn").onclick = () => {
+    if (!recognition) {
+      alert("Speech Recognition not supported in this browser.");
+      return;
+    }
+    recognition.start();
+    speechStatus.textContent = "Listening...";
+    speechStatus.className = "font-semibold text-green-600";
+  };
+
+  document.getElementById("micOff").onclick = () => {
+    if (!recognition) return;
+    recognition.stop();
+    speechStatus.textContent = "off";
+    speechStatus.className = "font-semibold text-red-600";
+  };
+
+  document.getElementById("clearSpeech").onclick = () => {
+    speechInput.value = "";
+    translationBox.value = "";
+  };
+
+  if (recognition) {
+    recognition.onresult = async (event) => {
+      const marathi = event.results[0][0].transcript;
+      speechInput.value = marathi;
+
+      try {
+        const res = await fetch(
+          "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=" +
+            encodeURIComponent(marathi)
+        );
+        const data = await res.json();
+        const english = data[0][0][0];
+        translationBox.value = english;
+
+        speechStatus.textContent = "Translated ✔";
+        speechStatus.className = "font-semibold text-blue-600";
+      } catch (err) {
+        console.error("Translate error:", err);
+        speechStatus.textContent = "Translate error";
+        speechStatus.className = "font-semibold text-red-600";
+      }
+    };
+
+    recognition.onerror = (e) => {
+      console.error("Speech error:", e);
+      speechStatus.textContent = "Error";
+      speechStatus.className = "font-semibold text-red-600";
+    };
+  }
+
+  // -------- NLP Backend Call ----------
+  async function runAllNLP(english) {
+    const response = await fetch("http://127.0.0.1:5000/nlp_models", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: english }),
+    });
+    return response.json();
+  }
+
+  function updateModelTable(results, bestModel) {
+    modelResults = results;
+    let html = "";
+    results.forEach((r) => {
+      html += `
+        <tr class="${r.model === bestModel.model ? "bg-green-200 font-bold" : ""}">
+          <td class="border px-1 py-1">${r.model}</td>
+          <td class="border px-1 py-1">${r.gloss.join(" ")}</td>
+          <td class="border px-1 py-1">${(r.score * 100).toFixed(2)}%</td>
+        </tr>
+      `;
+    });
+    document.getElementById("modelTable").innerHTML = html;
+  }
+
+  // Button: use English text and generate ISL
+  document.getElementById("startISLFromSpeech").onclick = async () => {
+    const english = translationBox.value.trim();
+    if (!english) {
+      alert("No English text. Speak something or type it first.");
+      return;
+    }
+
+    try {
+      const data = await runAllNLP(english);
+      updateModelTable(data.results, data.best);
+      buildSequenceFromBest(data.best);
+    } catch (err) {
+      console.error("NLP error:", err);
+      alert("Error calling NLP backend. Check if Flask server (port 5000) is running.");
+    }
+  };
+</script>
+
+</body>
+</html>

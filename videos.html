@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Videos - MudraVaani</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+
+<body class="bg-gradient-to-b from-gray-900 via-indigo-900 to-teal-400 text-white">
+
+  <!-- NAVBAR -->
+  <nav class="flex justify-between items-center px-10 py-4 bg-gray-900/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="flex items-center space-x-3">
+      <img src="images/logo2.png" class="w-12 h-12" />
+      <span class="text-xl font-bold text-teal-300">MudraVaani</span>
+    </div>
+    <div class="space-x-6">
+      <a href="index.html" class="hover:text-teal-300">Home</a>
+      <a href="convert.html" class="hover:text-teal-300">Convert</a>
+      <a href="learn.html" class="hover:text-teal-300">Learn Sign</a>
+      <a href="videos.html" class="hover:text-teal-300">Videos</a>
+      <a href="live_call.html" class="hover:text-teal-300">Live Call</a>
+      <a href="feedback.html" class="hover:text-teal-300">Feedback</a>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <section class="py-16 text-center bg-indigo-950">
+    <h1 class="text-5xl font-bold text-teal-300 mb-4" data-aos="fade-down">Explore & Upload ISL Videos</h1>
+    <p class="text-indigo-200 max-w-3xl mx-auto text-lg" data-aos="fade-up">
+      Upload new ISL videos or open existing videos using a unique ID. Help us grow the MudraVaani ISL dataset!
+    </p>
+  </section>
+
+  <!-- UPLOAD SECTION -->
+  <section class="bg-white text-gray-900 py-16 px-6">
+    <div class="max-w-3xl mx-auto text-center space-y-10">
+
+      <h2 class="text-3xl font-bold text-indigo-800">Upload New ISL Video</h2>
+
+      <div class="bg-gray-100 p-8 rounded-2xl shadow-lg space-y-4">
+
+        <input id="videoName" type="text" placeholder="Enter gloss name e.g., EAT, GO, HELP"
+          class="w-full px-4 py-3 rounded-lg border">
+
+        <textarea id="videoDescription" placeholder="Description (optional)"
+          class="w-full px-4 py-3 rounded-lg border"></textarea>
+
+        <input id="videoFile" type="file" accept="video/*"
+          class="w-full px-4 py-3 rounded-lg bg-white border">
+
+        <button id="uploadBtn"
+          class="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-lg font-bold transition">
+          Upload to MudraVaani Dataset
+        </button>
+
+        <p id="uploadStatus" class="text-sm text-indigo-700"></p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- OPEN EXISTING VIDEO -->
+  <section class="bg-indigo-900/40 py-16 text-center">
+    <h2 class="text-3xl font-bold text-teal-300 mb-4">Open ISL Video</h2>
+    <p class="text-indigo-100 mb-8">Enter a Video ID to open the video instantly.</p>
+
+    <div class="flex flex-col md:flex-row justify-center items-center gap-4">
+  <input id="videoIdInput" type="text" placeholder="Enter Video ID..."
+    class="px-4 py-3 rounded-lg border w-full md:w-96 text-black bg-white">
+  
+  <button id="openVideoBtn"
+    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition">
+    Open Video
+  </button>
+</div>
+
+    <!-- Video player -->
+    <div id="videoPlayerBox" class="hidden mt-10" data-aos="zoom-in">
+      <h3 class="text-2xl font-bold text-indigo-200 mb-4">🎥 Your Video</h3>
+
+      <video id="videoFrame" class="w-full max-w-3xl mx-auto h-96 rounded-xl shadow-lg"
+             controls playsinline preload="auto"></video>
+    </div>
+  </section>
+
+  <!-- VIDEO GALLERY -->
+<section class="bg-white py-16 text-gray-900">
+  <div class="max-w-6xl mx-auto px-6">
+    <h2 class="text-3xl font-bold text-indigo-800 mb-8 text-center">
+      ISL Video Gallery
+    </h2>
+
+    <div id="galleryGrid" 
+         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <!-- Videos will auto-load here -->
+    </div>
+  </div>
+</section>
+
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-gray-300 pt-10">
+    <div class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
+
+      <div>
+        <h3 class="font-bold text-lg mb-3">MudraVaani</h3>
+        <p class="text-sm text-gray-400">
+          A toolkit dedicated to Indian Sign Language learning & translation.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-lg mb-3">SERVICES</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="convert.html" class="hover:text-white">Convert</a></li>
+          <li><a href="learn.html" class="hover:text-white">Learn</a></li>
+          <li><a href="videos.html" class="hover:text-white">Videos</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-lg mb-3">LINKS</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="index.html" class="hover:text-white">Home</a></li>
+          <li><a href="feedback.html" class="hover:text-white">Feedback</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-lg mb-3">CONTACT</h3>
+        <p>🏠 VIT, Pune</p>
+        <p>✉️ shrinivas.fere24@vit.edu</p>
+        <p>📞 +91 7770070782</p>
+      </div>
+
+    </div>
+    <div class="bg-gray-800 text-center py-4 text-sm text-gray-400">© 2025 MudraVaani</div>
+  </footer>
+
+  <!-- AOS Animations -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init({ duration: 1000 });</script>
+
+  <!-- FRONT-END LOGIC -->
+  <script>
+
+    /* ----------------------------- UPLOAD TO SUPABASE ----------------------------- */
+    document.getElementById("uploadBtn").addEventListener("click", async () => {
+      const name = document.getElementById("videoName").value.trim();
+      const desc = document.getElementById("videoDescription").value.trim();
+      const file = document.getElementById("videoFile").files[0];
+
+      if (!name || !file) {
+        alert("Enter a name and choose a video!");
+        return;
+      }
+
+      const form = new FormData();
+      form.append("name", name);
+      form.append("description", desc);
+      form.append("video", file);
+
+      const status = document.getElementById("uploadStatus");
+      status.innerHTML = `
+        <div class='w-full bg-gray-300 rounded-lg overflow-hidden'>
+          <div id='progressBar' class='h-3 bg-teal-600' style='width:0%'></div>
+        </div>
+        <p id='progressText' class='text-indigo-700 mt-2'>Uploading… 0%</p>
+      `;
+
+      const xhr = new XMLHttpRequest();
+
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percent = Math.round((event.loaded / event.total) * 100);
+          document.getElementById("progressBar").style.width = percent + "%";
+          document.getElementById("progressText").innerText = "Uploading… " + percent + "%";
+        }
+      };
+
+      xhr.onload = () => {
+        const data = JSON.parse(xhr.responseText);
+        if (data.success) {
+          document.getElementById("progressText").innerHTML =
+            `✔ Uploaded Successfully!<br><b>Video ID:</b> ${data.video_id}<br>
+             <a href="${data.url}" target="_blank" class="text-teal-700 underline">Open Video</a>`;
+        } else {
+          document.getElementById("progressText").innerText = "❌ Upload Failed!";
+        }
+      };
+
+      xhr.onerror = () => {
+        document.getElementById("progressText").innerText = "❌ Network / Server Error!";
+      };
+
+      xhr.open("POST", "http://localhost:5002/upload_video");
+      xhr.send(form);
+    });
+
+
+    /* ----------------------------- OPEN VIDEO ----------------------------- */
+    document.getElementById("openVideoBtn").addEventListener("click", async () => {
+      const id = document.getElementById("videoIdInput").value.trim();
+      if (!id) return alert("Enter a video ID!");
+
+      const res = await fetch("http://localhost:5002/get_video?id=" + id);
+      const data = await res.json();
+
+      if (!data.success) {
+        alert("Invalid Video ID!");
+        return;
+      }
+
+      document.getElementById("videoFrame").src = data.url;
+      document.getElementById("videoPlayerBox").classList.remove("hidden");
+    });
+
+
+    /* ----------------------------- AUTO LOAD VIDEO WHEN ?id=XYZ ----------------------------- */
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("id")) {
+      const id = params.get("id");
+      fetch("http://localhost:5002/get_video?id=" + id)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            document.getElementById("videoFrame").src = data.url;
+            document.getElementById("videoPlayerBox").classList.remove("hidden");
+          }
+        });
+    }
+
+    /* ------------------- LOAD GALLERY ------------------- */
+async function loadGallery() {
+  const res = await fetch("http://localhost:5002/list_videos");
+  const data = await res.json();
+
+  if (!data.success) return;
+
+  const grid = document.getElementById("galleryGrid");
+  grid.innerHTML = ""; // clear
+
+  data.videos.forEach(v => {
+    const card = document.createElement("div");
+    card.className =
+      "bg-gray-100 rounded-xl shadow-lg p-3 hover:shadow-2xl transition cursor-pointer";
+
+    card.innerHTML = `
+      <video class="w-full h-40 rounded-lg mb-2" src="${v.url}" muted></video>
+      <h3 class="text-lg font-bold text-indigo-800">${v.name}</h3>
+      <p class="text-sm text-gray-600">${v.description || ""}</p>
+    `;
+
+    // When clicked → open player
+    card.addEventListener("click", () => {
+      document.getElementById("videoFrame").src = v.url;
+      document.getElementById("videoPlayerBox").classList.remove("hidden");
+
+      // Scroll to video player
+      document.getElementById("videoPlayerBox").scrollIntoView({ behavior: "smooth" });
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+// Load gallery on page load
+loadGallery();
+
+  </script>
+
+</body>
+</html>

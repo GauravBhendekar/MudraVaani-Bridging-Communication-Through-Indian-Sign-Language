@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MudraVaani</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <style>
+      /* Text shadow for better readability on background image */
+      .hero-text-shadow {
+        text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+      }
+      /* Transparent dark overlay */
+      .hero-overlay {
+        background: rgba(0, 0, 0, 0.45);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+      }
+    </style>
+    <style>
+      .hero-text-shadow {
+        text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+      }
+    </style>
+  </head>
+  <body class="text-white">
+    <!-- Overlay -->
+    <div class="hero-overlay"></div>
+
+    <!-- Navbar -->
+    <nav
+      class="flex justify-between items-center px-10 py-4 bg-gray-900/80 backdrop-blur-md sticky top-0 z-50"
+    >
+      <div class="flex items-center space-x-3">
+        <img
+          src="images/logo2.png"
+          alt="logo"
+          class="w-12 h-12 transition-transform duration-300 hover:scale-110"
+        />
+        <span class="text-xl font-bold text-teal-300">MudraVaani</span>
+      </div>
+      <div class="space-x-6">
+        <a
+          href="index.html"
+          class="hover:text-teal-300 transition-colors duration-300"
+          >Home</a
+        >
+        <a
+          href="convert.html"
+          class="hover:text-teal-300 transition-colors duration-300"
+          >Convert</a
+        >
+        <a
+          href="learn.html"
+          class="hover:text-teal-300 transition-colors duration-300"
+          >Learn Sign</a
+        >
+        <a
+          href="videos.html"
+          class="hover:text-teal-300 transition-colors duration-300"
+          >Videos</a
+        >
+        <a
+          href="live_call.html"
+          class="hover:text-teal-300 transition-colors duration-300"
+          >Live Call</a
+        >
+        <a
+          href="feedback.html"
+          class="hover:text-teal-300 transition-colors duration-300"
+          >Feedback</a
+        >
+      </div>
+    </nav>
+
+    <section
+      class="relative flex flex-col items-center justify-center h-[90vh] text-center px-6"
+      data-aos="fade-up"
+      style="
+        background-image: url('images/Backgroung.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      "
+    >
+      <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+
+      <h1
+        class="relative text-6xl md:text-7xl font-bold mb-6 text-indigo-200 hero-text-shadow"
+      >
+        Welcome to MudraVaani!
+      </h1>
+
+      <div class="relative w-20 h-1 bg-emerald-400 rounded mb-6"></div>
+
+      <p
+        class="relative text-lg text-indigo-100 max-w-2xl mb-8 hero-text-shadow"
+      >
+        This is a complete toolkit for Indian Sign Language. Explore our range
+        of features which have been carefully designed keeping in mind the
+        specific needs of people related to ISL.
+      </p>
+
+      <a href="#services" class="relative">
+        <button
+          class="bg-teal-400 text-black px-6 py-3 rounded-md font-medium shadow-md transition-transform duration-300 hover:bg-teal-500 hover:scale-105"
+        >
+          Get Started ⌄
+        </button>
+      </a>
+    </section>
+
+    <!-- Info Section -->
+    <section
+      class="bg-slate-100 text-gray-800 py-20 px-6 text-center"
+      data-aos="fade-right"
+    >
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold text-indigo-700 mb-4">
+          We've what you need!
+        </h2>
+        <div class="w-20 h-1 bg-emerald-400 rounded mx-auto mb-6"></div>
+        <p class="text-lg mb-12 text-gray-700">
+          A comprehensive and aesthetic Indian Sign Language toolkit. A
+          minimalist yet informative interface. Wide range of features
+          containing different functionalities that are necessary to work with
+          ISL. What else do you need anyway! We have everything wrapped up
+          here!<br />
+          Dive into our diverse services and let us know about your experience!
+        </p>
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="bg-slate-100 text-gray-800 py-16 px-6">
+      <div class="max-w-6xl mx-auto text-center">
+        <h2
+          class="text-3xl md:text-4xl font-bold text-indigo-700 mb-4"
+          data-aos="zoom-in"
+        >
+          Our Services
+        </h2>
+        <div class="w-20 h-1 bg-emerald-400 rounded mx-auto mb-6"></div>
+        <p
+          class="text-lg text-gray-700 max-w-3xl mx-auto mb-12"
+          data-aos="fade-up"
+        >
+          A comprehensive and aesthetic Indian Sign Language toolkit. A
+          minimalist yet informative interface. Wide range of features
+          containing different functionalities that are necessary to work with
+          ISL. What else do you need anyway! We have everything wrapped up
+          here!<br />
+          Dive into our diverse services and let us know about your experience!
+        </p>
+
+        <!-- Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Convert -->
+          <div
+            class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300"
+            data-aos="flip-left"
+          >
+            <img
+              src="images/convert.png"
+              alt="Convert"
+              class="w-full h-56 object-cover"
+            />
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-indigo-700 mb-2">Convert</h3>
+              <p class="text-gray-600 text-sm mb-4">
+                Want to convert audio or text into Indian Sign Language? Provide
+                your audio by speaking into your mic or type the text that you
+                want to convert into ISL and watch the magic happen!
+              </p>
+            </div>
+            <div class="bg-teal-400 text-center py-3">
+              <a
+                href="convert.html"
+                class="text-black font-semibold hover:text-white transition-colors"
+                >EXPLORE NOW!</a
+              >
+            </div>
+          </div>
+
+          <!-- Learn Sign -->
+          <div
+            class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300"
+            data-aos="flip-up"
+          >
+            <img
+              src="images/learn.png"
+              alt="Learn Sign"
+              class="w-full h-56 object-cover"
+            />
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-indigo-700 mb-2">Learn Sign</h3>
+              <p class="text-gray-600 text-sm mb-4">
+                Curious about Indian Sign Language? Select a sign, watch it as
+                many times as you want, and learn ISL. Learning something new is
+                always a good thing, you know!
+              </p>
+            </div>
+            <div class="bg-teal-400 text-center py-3">
+              <a
+                href="learn.html"
+                class="text-black font-semibold hover:text-white transition-colors"
+                >EXPLORE NOW!</a
+              >
+            </div>
+          </div>
+
+          <!-- Videos -->
+          <div
+            class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300"
+            data-aos="flip-right"
+          >
+            <img
+              src="images/videos.png"
+              alt="Videos"
+              class="w-full h-56 object-cover"
+            />
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-indigo-700 mb-2">Videos</h3>
+              <p class="text-gray-600 text-sm mb-4">
+                Interested in creating wonderful videos using Indian Sign
+                Language? Upload your text, or speak through your mic, and the
+                system will create videos using ISL for your content!
+              </p>
+            </div>
+            <div class="bg-teal-400 text-center py-3">
+              <a
+                href="videos.html"
+                class="text-black font-semibold hover:text-white transition-colors"
+                >EXPLORE NOW!</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 pt-10">
+      <div
+        class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-8"
+      >
+        <div>
+          <h3 class="font-bold text-lg mb-3">MudraVaani</h3>
+          <p class="text-sm text-gray-400">
+            A comprehensive toolkit containing various features related to
+            Indian Sign Language.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-3">SERVICES</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="convert.html" class="hover:text-white">Convert</a></li>
+            <li>
+              <a href="learn.html" class="hover:text-white">Learn Sign</a>
+            </li>
+            <li><a href="videos.html" class="hover:text-white">Videos</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-3">USEFUL LINKS</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="index.html" class="hover:text-white">Home</a></li>
+            <li>
+              <a href="feedback.html" class="hover:text-white">Feedback</a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-3">CONTACT</h3>
+          <ul class="space-y-2 text-sm">
+            <li>🏠 VIT, Pune</li>
+            <li>
+              ✉️
+              <a href="mailto:edi.isl24@vit.edu" class="hover:text-white"
+                >edi.isl24@vit.edu</a
+              >
+            </li>
+            <li>📞 +91 7770070782</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-gray-800 text-center py-4 text-sm text-gray-400">
+        © 2025 Copyright
+      </div>
+    </footer>
+
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 1000,
+        once: false,
+      });
+    </script>
+  </body>
+</html>

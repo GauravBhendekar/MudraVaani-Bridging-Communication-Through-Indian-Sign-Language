@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn - MudraVaani</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Avatar + Video */
+    #learnVideo {
+      object-fit: contain;
+      background-color: transparent !important;
+      border-radius: 16px;
+      width: 95%;
+      height: 92%;
+    }
+
+    #avatarWrapper, #avatarImage {
+      background: transparent !important;
+    }
+
+    /* Highlight effect */
+    .active-letter {
+      background-color: #fbbf24 !important;
+      color: black !important;
+      transform: scale(1.1);
+      transition: 0.2s;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 text-gray-900">
+
+<!-- NAVBAR -->
+<nav class="flex justify-between items-center px-10 py-4 bg-gray-900 text-white sticky top-0 z-50">
+  <div class="flex items-center space-x-3">
+    <img src="images/logo2.png" alt="logo" class="w-12 h-12 hover:scale-110 transition" />
+    <span class="text-xl font-bold text-teal-300">MudraVaani</span>
+  </div>
+
+  <div class="space-x-6">
+    <a href="index.html" class="hover:text-teal-300">Home</a>
+    <a href="convert.html" class="hover:text-teal-300">Convert</a>
+    <a href="learn.html" class="text-teal-300 font-semibold">Learn Sign</a>
+    <a href="videos.html" class="hover:text-teal-300">Videos</a>
+    <a
+          href="live_call.html"
+          class="hover:text-teal-300 transition-colors duration-300"
+          >Live Call</a
+        >
+    <a href="feedback.html" class="hover:text-teal-300">Feedback</a>
+  </div>
+</nav>
+
+
+<!-- MAIN GRID -->
+<div class="grid grid-cols-12 h-[calc(100vh-80px)]">
+
+  <!-- LEFT PANEL — ALPHABETS -->
+  <div class="col-span-2 bg-white border-r p-6 overflow-y-auto">
+    <h2 class="text-2xl font-semibold text-center mb-4">Alphabets</h2>
+
+    <div class="grid grid-cols-3 gap-2">
+      <script>
+        const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        document.write(
+          alphabets.map(
+            l => `<button class="letter-btn letter-${l} bg-blue-700 text-white py-2 rounded"
+                          onclick="playVideo('${l}')">${l}</button>`
+          ).join("")
+        );
+      </script>
+    </div>
+  </div>
+
+
+  <!-- CENTER PANEL — AVATAR -->
+  <div class="col-span-7 flex flex-col items-center justify-center bg-gray-200 p-4">
+    <h3 class="font-bold text-xl text-gray-700 mb-3">ISL Avatar Animation</h3>
+
+    <div id="avatarWrapper" class="relative w-full h-[90%] flex items-center justify-center">
+      <img src="images/OURBOT.png" id="avatarImage"
+           class="absolute w-[85%] h-[90%] object-contain z-0">
+
+      <video id="learnVideo"
+             autoplay muted playsinline
+             class="absolute w-[85%] h-[90%] object-contain z-10 opacity-0 transition-opacity duration-200">
+      </video>
+    </div>
+  </div>
+
+
+  <!-- RIGHT PANEL — WORD + SPEED -->
+  <div class="col-span-3 bg-white border-l p-6 overflow-y-auto">
+    <h2 class="text-xl font-semibold text-center mb-4">Learn Any Word</h2>
+
+    <input id="wordInput" type="text" placeholder="Example: HOME"
+           class="w-full p-3 border rounded-lg mb-4">
+
+    <button onclick="playWord()" class="w-full bg-blue-700 text-white py-2 rounded-lg mb-4">
+      Generate & Play
+    </button>
+
+    <!-- SPEED SLIDER -->
+    <label class="font-semibold">Animation Speed: <span id="speedValue" class="font-bold">1.0x</span></label>
+    <input id="speedSlider" type="range" min="0.25" max="2" step="0.25" value="1"
+           class="w-full mb-6"
+           oninput="changeSpeed()" />
+
+    <h3 class="text-lg font-semibold mt-4 mb-2">Letter-by-letter:</h3>
+    <div id="wordLetters" class="flex flex-wrap gap-2"></div>
+  </div>
+
+</div>
+
+
+<!-- SCRIPT -->
+<script>
+let videoData = {};
+let playbackSpeed = 1;
+
+fetch("learn_map.json")
+  .then(res => res.json())
+  .then(data => videoData = data);
+
+/* SPEED SLIDER LOGIC */
+function changeSpeed() {
+  let slider = document.getElementById("speedSlider");
+  playbackSpeed = parseFloat(slider.value);
+
+  document.getElementById("speedValue").innerText = playbackSpeed + "x";
+
+  const video = document.getElementById("learnVideo");
+  video.playbackRate = playbackSpeed; // real-time update
+}
+
+/* HIGHLIGHT CONTROL */
+function highlightLetter(letter) {
+  document.querySelectorAll(".letter-btn")
+    .forEach(btn => btn.classList.remove("active-letter"));
+
+  document.querySelectorAll(`.letter-${letter}`)
+    .forEach(btn => btn.classList.add("active-letter"));
+}
+
+function clearHighlights() {
+  document.querySelectorAll(".letter-btn")
+    .forEach(btn => btn.classList.remove("active-letter"));
+}
+
+/* PLAY ONE LETTER */
+function playVideo(letter) {
+  const video = document.getElementById("learnVideo");
+  const avatar = document.getElementById("avatarImage");
+  const url = videoData[letter];
+
+  if (!url) return;
+
+  clearHighlights();
+  highlightLetter(letter);
+
+  video.loop = false;
+  video.style.opacity = 1;
+  avatar.style.opacity = 0;
+
+  video.src = url;
+  video.currentTime = 0;
+  video.playbackRate = playbackSpeed;
+  video.play();
+
+  video.onended = () => {
+    video.style.opacity = 0;
+    avatar.style.opacity = 1;
+    clearHighlights();
+  };
+}
+
+/* PLAY FULL WORD SEQUENCE */
+function playWord() {
+  const box = document.getElementById("wordLetters");
+  let word = document.getElementById("wordInput").value
+               .toUpperCase().replace(/[^A-Z]/g, "");
+  let letters = word.split("");
+
+  box.innerHTML = "";
+
+  letters.forEach(l => {
+    box.innerHTML += `<button class="letter-btn letter-${l} bg-green-600 text-white px-3 py-1 rounded">${l}</button>`;
+  });
+
+  playSequence(letters, 0);
+}
+
+/* AUTO-PLAY SEQUENCE */
+function playSequence(letters, index) {
+  const video = document.getElementById("learnVideo");
+  const avatar = document.getElementById("avatarImage");
+
+  if (index >= letters.length) {
+    video.style.opacity = 0;
+    avatar.style.opacity = 1;
+    clearHighlights();
+    return;
+  }
+
+  const letter = letters[index];
+  const url = videoData[letter];
+
+  if (!url) {
+    playSequence(letters, index + 1);
+    return;
+  }
+
+  highlightLetter(letter);
+
+  video.loop = false;
+  video.src = url;
+  video.currentTime = 0;
+  video.playbackRate = playbackSpeed;
+  avatar.style.opacity = 0;
+  video.style.opacity = 1;
+  video.play();
+
+  video.onended = () => {
+    playSequence(letters, index + 1);
+  };
+}
+</script>
+
+</body>
+</html>

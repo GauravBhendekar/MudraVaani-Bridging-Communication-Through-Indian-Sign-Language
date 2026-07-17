@@ -1,0 +1,9 @@
+{
+  "https": {
+    "enable": true,
+    "cert": "./cert.pem",
+    "key": "./key.pem"
+  },
+  "port": 5500,
+  "remote": true
+}

@@ -1,0 +1,113 @@
+MudraVaani – Bridging Communication Through Indian Sign Language
+Overview
+
+MudraVaani is an AI-assisted web application designed to improve communication accessibility for the Deaf and Hard-of-Hearing community. The platform converts English text into Indian Sign Language (ISL) gloss and plays corresponding sign videos, while also providing learning resources, live communication, and community-driven video uploads.
+
+Features
+
+✅ English to Indian Sign Language conversion
+
+✅ NLP-based sentence simplification using spaCy & Stanza
+
+✅ ISL Gloss generation
+
+✅ Video-based sign playback
+
+✅ Learn Sign interactive module
+
+✅ Community video upload portal
+
+✅ Live video calling with signaling
+
+✅ Feedback system
+
+Tech Stack
+Frontend
+HTML5
+Tailwind CSS
+JavaScript
+Backend
+Python
+Flask
+Flask-CORS
+NLP
+spaCy
+Stanza
+Database & Storage
+Supabase Storage
+JSON Mapping Database
+Project Structure
+MudraVaani/
+│
+├── index.html
+├── convert.html
+├── learn.html
+├── videos.html
+├── feedback.html
+├── live_call.html
+│
+├── nlp_server.py
+├── upload_server.py
+├── call_signaling.py
+│
+├── models/
+├── images/
+├── videos/
+│
+├── video_map.json
+├── videos_db.json
+└── README.md
+Workflow
+English Sentence
+        │
+        ▼
+NLP Processing
+(spaCy + Stanza)
+        │
+        ▼
+ISL Gloss Generation
+        │
+        ▼
+Video Mapping
+        │
+        ▼
+ISL Video Playback
+Installation
+
+Clone the repository
+
+Navigate to the project
+
+cd MudraVaani
+
+Install dependencies
+
+pip install flask flask-cors spacy stanza supabase
+
+Download NLP models
+
+python -m spacy download en_core_web_sm
+
+Run
+
+python nlp_server.py
+python upload_server.py
+python call_signaling.py
+
+Open
+
+index.html
+Future Improvements
+Real-time sign language recognition
+Speech-to-ISL conversion
+Mobile application
+Larger ISL dataset
+AI-generated avatar signing
+User authentication
+Team
+
+Developed as an academic project by the MudraVaani team to promote accessible communication through technology.
+
+License
+
+This project is intended for educational and research purposes.
